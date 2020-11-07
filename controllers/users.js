@@ -6,7 +6,9 @@ const InvalidValueError = require('../errors/invalid-value-error');
 const NotFoundError = require('../errors/not-found-error');
 const AuthorizationRequiredError = require('../errors/authorization-required-error');
 const UniqueError = require('../errors/unique-error');
-const { incorrectUserId, userNotFound, incorrectData, emailAlreadyExists } = require('../utils/constants');
+const {
+  incorrectUserId, userNotFound, incorrectData, emailAlreadyExists,
+} = require('../utils/constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 

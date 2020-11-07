@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
 const cors = require('cors');
 require('dotenv').config();
@@ -15,6 +16,7 @@ const { PORT = 3000, DB_ADDRESS = 'mongodb://localhost:27017/newsdb' } = process
 
 const app = express();
 
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
