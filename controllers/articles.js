@@ -45,10 +45,8 @@ const deleteArticle = (req, res, next) => {
     throw new InvalidValueError('Некорректный id пользователя');
   }
 
-  console.log('articleId', articleId);
   Article.findById(articleId).select('+owner')
     .then((article) => {
-      console.log('article', article);
       if (!article) {
         throw new NotFoundError('Новость не найдена');
       }
