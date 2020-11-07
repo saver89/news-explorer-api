@@ -6,6 +6,7 @@ const InvalidValueError = require('../errors/invalid-value-error');
 const NotFoundError = require('../errors/not-found-error');
 const AuthorizationRequiredError = require('../errors/authorization-required-error');
 const UniqueError = require('../errors/unique-error');
+const { incorrectUserId, userNotFound, incorrectData, emailAlreadyExists } = require('../utils/constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -13,7 +14,7 @@ const getMe = (req, res, next) => {
   const id = req.user._id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new InvalidValueError('Некорректный id пользователя');
+    throw new InvalidValueError(incorrectUserId);
   }
 
   User.findById(id)
@@ -21,7 +22,7 @@ const getMe = (req, res, next) => {
       if (user) {
         res.send({ data: user });
       } else {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError(userNotFound);
       }
     })
     .catch(next);
@@ -40,9 +41,9 @@ const createUser = (req, res, next) => {
     .then((user) => res.send({ data: { _id: user._id } }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new InvalidValueError('Некорректные данные'));
+        next(new InvalidValueError(incorrectData));
       } else if (err.name === 'MongoError' && err.code === 11000) {
-        next(new UniqueError('Почта уже зарегистрирована в системе'));
+        next(new UniqueError(emailAlreadyExists));
       } else {
         next(err);
       }

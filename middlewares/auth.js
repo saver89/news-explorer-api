@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const AuthorizationRequiredError = require('../errors/authorization-required-error');
+const { authorizationRequired } = require('../utils/constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -7,7 +8,7 @@ module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
 
   if (!token) {
-    throw new AuthorizationRequiredError('Необходима авторизация');
+    throw new AuthorizationRequiredError(authorizationRequired);
   }
 
   let payload;
@@ -19,7 +20,7 @@ module.exports = (req, res, next) => {
         : '96484ccdc937a7b0538d834a4c75d32c3e4164a8271c7960e910861f1e406515',
     );
   } catch (err) {
-    throw new AuthorizationRequiredError('Необходима авторизация');
+    throw new AuthorizationRequiredError(authorizationRequired);
   }
 
   req.user = payload;

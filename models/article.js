@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { incorrectUrlError } = require('../utils/constants');
 
 const articleSchema = new mongoose.Schema({
   keyword: {

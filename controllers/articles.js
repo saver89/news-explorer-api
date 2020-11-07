@@ -3,6 +3,9 @@ const Article = require('../models/article.js');
 const InvalidValueError = require('../errors/invalid-value-error');
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
+const {
+  incorrectNewId, incorrectUserId, newsNotFound, noRightsDeleteNews, incorrectData,
+} = require('../utils/constants.js');
 
 const getArticles = (req, res, next) => {
   Article.find({})
@@ -17,7 +20,7 @@ const createArticle = (req, res, next) => {
   const ownerId = req.user._id;
 
   if (!mongoose.Types.ObjectId.isValid(ownerId)) {
-    throw new InvalidValueError('Некорректный id пользователя');
+    throw new InvalidValueError(incorrectUserId);
   }
 
   Article.create({
@@ -26,7 +29,7 @@ const createArticle = (req, res, next) => {
     .then((article) => res.send({ data: article }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new InvalidValueError('Некорректные данные'));
+        next(new InvalidValueError(incorrectData));
       } else {
         next(err);
       }
@@ -38,20 +41,20 @@ const deleteArticle = (req, res, next) => {
   const userId = req.user._id;
 
   if (!mongoose.Types.ObjectId.isValid(articleId)) {
-    throw new InvalidValueError('Некорректный id новости');
+    throw new InvalidValueError(incorrectNewId);
   }
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-    throw new InvalidValueError('Некорректный id пользователя');
+    throw new InvalidValueError(incorrectUserId);
   }
 
   Article.findById(articleId).select('+owner')
     .then((article) => {
       if (!article) {
-        throw new NotFoundError('Новость не найдена');
+        throw new NotFoundError(newsNotFound);
       }
       if (article.owner.toString() !== userId) {
-        throw new ForbiddenError('Нет прав для удаления новости');
+        throw new ForbiddenError(noRightsDeleteNews);
       }
       return Article.findByIdAndRemove(articleId);
     })
@@ -59,7 +62,7 @@ const deleteArticle = (req, res, next) => {
       if (article) {
         res.send({ data: article });
       } else {
-        throw new NotFoundError('Новость не найдена');
+        throw new NotFoundError(newsNotFound);
       }
     })
     .catch(next);
