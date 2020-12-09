@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const { incorrectUrlError } = require('../utils/constants');
 
 const articleSchema = new mongoose.Schema({
   keyword: {
@@ -33,7 +32,6 @@ const articleSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: true,
     validate: {
       validator: (v) => validator.isURL(v),
       message: 'Некорректный url',

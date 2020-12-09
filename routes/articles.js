@@ -13,7 +13,7 @@ articles.post(
     body: Joi.object().keys({
       link: Joi.string()
         .regex(
-          /https?:\/\/[-a-z0-9/@:%._+~#=]+\.[a-z]+[-a-z0-9/@:%._+~#=]*#?$/i,
+          /https?:\/\/[-a-z0-9/@:%._+~#=?]+\.[a-z]+[-a-z0-9/@:%._+~#=?]*#?$/i,
         )
         .required(),
       keyword: Joi.string().required(),
@@ -22,8 +22,8 @@ articles.post(
       date: Joi.string().required(),
       source: Joi.string().required(),
       image: Joi.string().regex(
-        /https?:\/\/[-a-z0-9/@:%._+~#=]+\.[a-z]+[-a-z0-9/@:%._+~#=]*#?$/i,
-      ).required(),
+        /https?:\/\/[-a-z0-9/@:%._+~#=?]+\.[a-z]+[-a-z0-9/@:%._+~#=?]*#?$/i,
+      ),
     }),
   }),
   createArticle,
